@@ -283,7 +283,7 @@ class Connection(object):
             frame_max = _C.AMQP_DEFAULT_FRAME_SIZE
         if heartbeat is None:
             heartbeat = _C.AMQP_DEFAULT_HEARTBEAT
-        args = list(map(lambda s: _ffi.new("char[]", s.encode("utf-8")), args))
+        args = [_ffi.new("char[]", s.encode("utf-8")) for s in args]
         self._check_reply(_C.amqp_login(self._state, vhost.encode("utf-8"), channel_max, frame_max, heartbeat, sasl_method, *args))
 
     def declare_queue(self, channel, queue, passive=False, durable=False, exclusive=False, auto_delete=False):
@@ -325,6 +325,7 @@ class Connection(object):
         if timeout is None:
             timeout = _ffi.NULL
         else:
+            # TODO this only works with integer timeouts
             timeout = _ffi.new("struct timeval *")
             timeout.tv_sec = timeout
             timeout.tv_usec = 0
