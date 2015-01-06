@@ -337,6 +337,11 @@ class Connection(object):
         if status != _C.AMQP_STATUS_OK:
             raise Exception("status=%d" % status)
 
+    def reject(self, channel, delivery_tag, requeue=False):
+        status = _C.amqp_basic_reject(self._state, channel, delivery_tag, requeue)
+        if status != _C.AMQP_STATUS_OK:
+            raise Exception("status=%d" % status)
+
 def _amqp_bytes(byts):
     return _ffi.buffer(byts.bytes, byts.len)[:]
 
