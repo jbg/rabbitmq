@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import rabbit
+import rabbitmq
 import msgpack
 
 
@@ -10,7 +10,7 @@ AMQP_BROKER_VHOST = ""
 AMQP_BROKER_USER = ""
 AMQP_BROKER_PASSWORD = ""
 
-conn = rabbit.Connection()
+conn = rabbitmq.Connection()
 conn.open(AMQP_BROKER_HOST, AMQP_BROKER_PORT)
 conn.login(AMQP_BROKER_VHOST, 0, AMQP_BROKER_USER, AMQP_BROKER_PASSWORD)
 conn.open_channel(1)
@@ -19,7 +19,7 @@ conn.declare_queue(1, "queuename")
 conn.bind_queue(1, "queuename", "queuename", "queuename")
 conn.consume(1, "queuename")
 
-publish_conn = rabbit.Connection()
+publish_conn = rabbitmq.Connection()
 publish_conn.open(AMQP_BROKER_HOST, AMQP_BROKER_PORT)
 publish_conn.login(AMQP_BROKER_VHOST, 0, AMQP_BROKER_USER, AMQP_BROKER_PASSWORD)
 publish_conn.open_channel(1)
@@ -36,7 +36,7 @@ while True:
         # do something with decoded_body
 
         # publish something, maybe result of operation
-        props = rabbit.Properties(content_type="application/x-msgpack", delivery_mode=1)
+        props = rabbitmq.Properties(content_type="application/x-msgpack", delivery_mode=1)
         body = msgpack.packb(payload)
         if len(body) > 8192:
             # example of compressing large message bodies
