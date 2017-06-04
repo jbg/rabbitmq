@@ -11,7 +11,7 @@ Available [on PyPI](https://pypi.python.org/pypi/rabbitmq), just `pip install ra
 
 Proper documentation coming soon. Example usage:
 
-```
+```python
 import rabbitmq
 
 conn = rabbitmq.Connection()
