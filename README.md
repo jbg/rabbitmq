@@ -1,4 +1,4 @@
-rabbit
+rabbitmq
 ======
 
 Python bindings to librabbitmq using CFFI
