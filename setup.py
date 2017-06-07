@@ -10,8 +10,8 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='rabbitmq',
-    version='0.1.0',
-    description='CFFI bindings to librabbitmq',
+    version='0.2.0',
+    description='CFFI bindings to librabbitmq 0.8.0',
     long_description=long_description,
     url='https://github.com/jbg/rabbitmq',
     author='Jasper Bryant-Greene',

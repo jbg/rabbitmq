@@ -227,7 +227,7 @@ _ffi.cdef("""
     amqp_rpc_reply_t amqp_login(amqp_connection_state_t state, char const * vhost, int channel_max, int frame_max, int heartbeat, amqp_sasl_method_enum sasl_method, ...);
     amqp_rpc_reply_t amqp_get_rpc_reply(amqp_connection_state_t state);
     amqp_queue_declare_ok_t * amqp_queue_declare(amqp_connection_state_t state, amqp_channel_t channel, amqp_bytes_t queue, amqp_boolean_t passive, amqp_boolean_t durable, amqp_boolean_t exclusive, amqp_boolean_t auto_delete, amqp_table_t arguments);
-    amqp_exchange_declare_ok_t * amqp_exchange_declare(amqp_connection_state_t state, amqp_channel_t channel, amqp_bytes_t exchange, amqp_bytes_t type, amqp_boolean_t passive, amqp_boolean_t durable, amqp_table_t arguments);
+    amqp_exchange_declare_ok_t * amqp_exchange_declare(amqp_connection_state_t state, amqp_channel_t channel, amqp_bytes_t exchange, amqp_bytes_t type, amqp_boolean_t passive, amqp_boolean_t durable, amqp_boolean_t auto_delete, amqp_boolean_t internal, amqp_table_t arguments);
     amqp_queue_bind_ok_t * amqp_queue_bind(amqp_connection_state_t state, amqp_channel_t channel, amqp_bytes_t queue, amqp_bytes_t exchange, amqp_bytes_t routing_key, amqp_table_t arguments);
     int amqp_basic_publish(amqp_connection_state_t state, amqp_channel_t channel, amqp_bytes_t exchange, amqp_bytes_t routing_key, amqp_boolean_t mandatory, amqp_boolean_t immediate, struct amqp_basic_properties_t_ const * properties, amqp_bytes_t body);
     amqp_basic_consume_ok_t * amqp_basic_consume(amqp_connection_state_t state, amqp_channel_t channel, amqp_bytes_t queue, amqp_bytes_t consumer_tag, amqp_boolean_t no_local, amqp_boolean_t no_ack, amqp_boolean_t exclusive, amqp_table_t arguments);
@@ -290,7 +290,10 @@ class Connection(object):
         if reply.reply_type != _C.AMQP_RESPONSE_NORMAL:
             raise Exception("reply_type=%d, library_error=%d" % (reply.reply_type, reply.library_error))
 
-    def login(self, vhost, sasl_method, *args, channel_max=None, frame_max=None, heartbeat=None):
+    def login(self, vhost, sasl_method, *args, **kwargs):
+        channel_max = kwargs.pop("channel_max", None)
+        frame_max = kwargs.pop("frame_max", None)
+        heartbeat = kwargs.pop("heartbeat", None)
         if channel_max is None:
             channel_max = _C.AMQP_DEFAULT_MAX_CHANNELS
         if frame_max is None:
